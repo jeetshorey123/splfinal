@@ -1,6 +1,6 @@
 {
     "rewrites": [
-      { "source": "/spl1/:path*", "destination": "/:path*" }
+      { "source": "/splfinall/:path*", "destination": "/:path*" }
     ]
   }
   
