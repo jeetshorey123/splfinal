@@ -39,11 +39,11 @@ const Home = () => {
             <p className="hero-subtitle">Experience the thrill of cricket like never before</p>
             <div className="hero-stats">
               <div className="stat-item">
-                <span className="stat-number">8</span>
+                <span className="stat-number">6</span>
                 <span className="stat-label">Teams</span>
               </div>
               <div className="stat-item">
-                <span className="stat-number">100+</span>
+                <span className="stat-number">50+</span>
                 <span className="stat-label">Players</span>
               </div>
               <div className="stat-item">

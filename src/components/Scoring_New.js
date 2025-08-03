@@ -3,23 +3,18 @@ import './Scoring.css';
 
 const Scoring = () => {
   // Main states
-  const [step, setStep] = useState('tournament'); // tournament, match, setup, toss, scoring, scorecard
+  const [step, setStep] = useState('tournament'); // tournament, match, toss, scoring, scorecard
   const [tournaments, setTournaments] = useState([]);
   const [selectedTournament, setSelectedTournament] = useState('');
   const [availableMatches, setAvailableMatches] = useState([]);
   const [selectedMatch, setSelectedMatch] = useState(null);
-  
-  // Match setup states
-  const [totalOvers, setTotalOvers] = useState(20);
-  const [showTossModal, setShowTossModal] = useState(false);
-  const [coinFlipping, setCoinFlipping] = useState(false);
-  const [tossResult, setTossResult] = useState('');
   
   // Toss states
   const [tossWinner, setTossWinner] = useState('');
   const [tossDecision, setTossDecision] = useState(''); // bat or bowl
   
   // Match states
+  const [totalOvers, setTotalOvers] = useState(20);
   const [battingTeam, setBattingTeam] = useState('');
   const [bowlingTeam, setBowlingTeam] = useState('');
   const [currentInnings, setCurrentInnings] = useState(1);
@@ -34,9 +29,6 @@ const Scoring = () => {
   const [currentBowler, setCurrentBowler] = useState('Bowler 1');
   const [ballHistory, setBallHistory] = useState([]);
   const [currentOverBalls, setCurrentOverBalls] = useState([]);
-  
-  // Extra states
-  const [showNoBallRuns, setShowNoBallRuns] = useState(false);
   
   // Player stats
   const [batsmanStats, setBatsmanStats] = useState({});
@@ -73,35 +65,11 @@ const Scoring = () => {
 
   const handleMatchSelect = (match) => {
     setSelectedMatch(match);
-    setStep('setup');
-  };
-
-  const handleMatchSetupComplete = () => {
     setStep('toss');
   };
 
-  const handleToss = () => {
-    setShowTossModal(true);
-  };
-
-  const flipCoin = () => {
-    setCoinFlipping(true);
-    setTimeout(() => {
-      const result = Math.random() > 0.5 ? 'heads' : 'tails';
-      setTossResult(result);
-      setCoinFlipping(false);
-    }, 2000);
-  };
-
-  const handleTossWin = (team) => {
-    setTossWinner(team);
-  };
-
-  const handleTossDecision = (decision) => {
-    setTossDecision(decision);
-    setShowTossModal(false);
-    
-    if (decision === 'bat') {
+  const handleTossComplete = () => {
+    if (tossDecision === 'bat') {
       setBattingTeam(tossWinner);
       setBowlingTeam(tossWinner === selectedMatch.team1 ? selectedMatch.team2 : selectedMatch.team1);
     } else {
@@ -125,79 +93,10 @@ const Scoring = () => {
     setStep('scoring');
   };
 
-  const switchBatsmen = () => {
-    const temp = striker;
-    setStriker(nonStriker);
-    setNonStriker(temp);
-  };
-
-  const switchInnings = () => {
-    if (currentInnings === 1) {
-      // End first innings
-      const firstInningsTarget = (currentInnings === 1 ? team1Score.runs : team2Score.runs) + 1;
-      
-      setCurrentInnings(2);
-      setBattingTeam(bowlingTeam);
-      setBowlingTeam(battingTeam);
-      
-      // Reset scores for second innings
-      setTeam2Score({ runs: 0, wickets: 0, overs: 0, balls: 0 });
-      setCurrentOver(0);
-      setCurrentBall(0);
-      setCurrentOverBalls([]);
-      
-      // Reset players
-      setStriker('Batsman 1');
-      setNonStriker('Batsman 2');
-      setCurrentBowler('Bowler 1');
-      
-      alert(`Target: ${firstInningsTarget} runs in ${totalOvers} overs`);
-    } else {
-      // Match completed
-      setMatchCompleted(true);
-      calculateMatchResult();
-    }
-  };
-
-  const calculateMatchResult = () => {
-    const team1Total = team1Score.runs;
-    const team2Total = team2Score.runs;
-    
-    let result = '';
-    if (team1Total > team2Total) {
-      result = `${selectedMatch.team1} won by ${team1Total - team2Total} runs`;
-    } else if (team2Total > team1Total) {
-      result = `${selectedMatch.team2} won by ${10 - team2Score.wickets} wickets`;
-    } else {
-      result = 'Match tied';
-    }
-    
-    setMatchResult(result);
-  };
-
   const recordBall = (runs, isExtra = false, extraType = '', isWicket = false, wicketType = '') => {
     const currentTeamScore = currentInnings === 1 ? team1Score : team2Score;
-    
-    // Calculate runs and balls
-    let totalRuns = runs;
-    let ballsToAdd = 1;
-    
-    // Handle extras - don't count ball for NB, WD
-    if (isExtra && (extraType === 'NB' || extraType === 'WD')) {
-      ballsToAdd = 0; // Don't count the ball
-      totalRuns = runs; // Extra run for NB/WD
-    } else if (isExtra && (extraType === 'B' || extraType === 'LB')) {
-      ballsToAdd = 1; // Count the ball for byes/leg byes
-      totalRuns = runs; // Runs from byes/leg byes
-    }
-    
-    // Special case: NB + runs (e.g., NB + 1 run = 2 total runs)
-    if (extraType === 'NB' && runs > 1) {
-      totalRuns = 1 + (runs - 1); // 1 for NB + additional runs
-    }
-    
-    const newRuns = currentTeamScore.runs + totalRuns;
-    const newBalls = currentTeamScore.balls + ballsToAdd;
+    const newRuns = currentTeamScore.runs + runs;
+    const newBalls = isExtra ? currentTeamScore.balls : currentTeamScore.balls + 1;
     const newWickets = isWicket ? currentTeamScore.wickets + 1 : currentTeamScore.wickets;
     
     // Update team score
@@ -214,25 +113,16 @@ const Scoring = () => {
       setTeam2Score(updatedScore);
     }
     
-    // Update batsman stats (only if not an extra that doesn't involve batsman)
-    if (!isExtra || (isExtra && (extraType === 'B' || extraType === 'LB'))) {
+    // Update batsman stats
+    if (!isExtra && !isWicket) {
       const updatedBatsmanStats = { ...batsmanStats };
       if (!updatedBatsmanStats[striker]) {
         updatedBatsmanStats[striker] = { runs: 0, balls: 0, fours: 0, sixes: 0, out: false, outType: '' };
       }
-      
-      // Add runs to batsman (only actual runs, not extras)
-      if (!isExtra) {
-        updatedBatsmanStats[striker].runs += runs;
-        if (runs === 4) updatedBatsmanStats[striker].fours += 1;
-        if (runs === 6) updatedBatsmanStats[striker].sixes += 1;
-      }
-      
-      // Add ball faced (only if ball is counted)
-      if (ballsToAdd > 0) {
-        updatedBatsmanStats[striker].balls += 1;
-      }
-      
+      updatedBatsmanStats[striker].runs += runs;
+      updatedBatsmanStats[striker].balls += 1;
+      if (runs === 4) updatedBatsmanStats[striker].fours += 1;
+      if (runs === 6) updatedBatsmanStats[striker].sixes += 1;
       setBatsmanStats(updatedBatsmanStats);
     }
     
@@ -246,17 +136,13 @@ const Scoring = () => {
       updatedBatsmanStats[striker].outType = wicketType;
       setBatsmanStats(updatedBatsmanStats);
       
-      // Ask for new batsman
-      setTimeout(() => {
-        const newBatsman = prompt(`${striker} is out (${wicketType}). Enter new batsman name:`);
-        if (newBatsman) {
-          setStriker(newBatsman);
-          // Initialize new batsman stats
-          const newBatsmanStats = { ...updatedBatsmanStats };
-          newBatsmanStats[newBatsman] = { runs: 0, balls: 0, fours: 0, sixes: 0, out: false, outType: '' };
-          setBatsmanStats(newBatsmanStats);
-        }
-      }, 500);
+      // Update bowler stats for wicket
+      const updatedBowlerStats = { ...bowlerStats };
+      if (!updatedBowlerStats[currentBowler]) {
+        updatedBowlerStats[currentBowler] = { overs: 0, balls: 0, runs: 0, wickets: 0, maidens: 0 };
+      }
+      updatedBowlerStats[currentBowler].wickets += 1;
+      setBowlerStats(updatedBowlerStats);
     }
     
     // Update bowler stats
@@ -264,129 +150,66 @@ const Scoring = () => {
     if (!updatedBowlerStats[currentBowler]) {
       updatedBowlerStats[currentBowler] = { overs: 0, balls: 0, runs: 0, wickets: 0, maidens: 0 };
     }
-    
-    // Add runs to bowler
-    updatedBowlerStats[currentBowler].runs += totalRuns;
-    
-    // Add ball to bowler (only if ball is counted)
-    if (ballsToAdd > 0) {
+    updatedBowlerStats[currentBowler].runs += runs;
+    if (!isExtra) {
       updatedBowlerStats[currentBowler].balls += 1;
       updatedBowlerStats[currentBowler].overs = Math.floor(updatedBowlerStats[currentBowler].balls / 6) + 
-                                                (updatedBowlerStats[currentBowler].balls % 6) / 10;
+        (updatedBowlerStats[currentBowler].balls % 6) / 10;
     }
-    
-    // Add wicket to bowler
-    if (isWicket) {
-      updatedBowlerStats[currentBowler].wickets += 1;
-    }
-    
     setBowlerStats(updatedBowlerStats);
     
-    // Update current over display
-    const ballDisplay = isWicket ? 'W' : 
-                       isExtra ? `${runs}${extraType}` : 
-                       runs === 0 ? '•' : runs.toString();
-    setCurrentOverBalls([...currentOverBalls, ballDisplay]);
+    // Record ball in history
+    const ballRecord = {
+      over: Math.floor(newBalls / 6),
+      ballInOver: (newBalls % 6) + 1,
+      runs,
+      isExtra,
+      extraType,
+      isWicket,
+      wicketType,
+      striker,
+      bowler: currentBowler,
+      timestamp: new Date().toLocaleTimeString()
+    };
     
-    // Change strike on odd runs (but not on wickets or certain extras)
-    if (!isWicket && runs % 2 === 1 && !isExtra) {
-      setTimeout(() => switchBatsmen(), 100);
+    setBallHistory([...ballHistory, ballRecord]);
+    setCurrentOverBalls([...currentOverBalls, `${runs}${isExtra ? ` (${extraType})` : ''}${isWicket ? ' W' : ''}`]);
+    
+    // Change strike if odd runs
+    if (runs % 2 === 1 && !isWicket) {
+      const temp = striker;
+      setStriker(nonStriker);
+      setNonStriker(temp);
     }
     
-    // Check for over completion (6 valid balls)
-    if (newBalls % 6 === 0 && ballsToAdd > 0) {
-      setTimeout(() => {
-        setCurrentOverBalls([]);
-        // Automatically switch batsmen at end of over
-        switchBatsmen();
-        alert('Over completed! Batsmen have been switched automatically.');
-        
-        // Ask for new bowler
-        const newBowler = prompt('Over completed! Enter new bowler name:');
-        if (newBowler) {
-          setCurrentBowler(newBowler);
-          // Initialize new bowler stats if needed
-          const newBowlerStats = { ...updatedBowlerStats };
-          if (!newBowlerStats[newBowler]) {
-            newBowlerStats[newBowler] = { overs: 0, balls: 0, runs: 0, wickets: 0, maidens: 0 };
-          }
-          setBowlerStats(newBowlerStats);
-        }
-      }, 1000);
+    // Check for over completion
+    if (!isExtra && newBalls % 6 === 0) {
+      setCurrentOverBalls([]);
+      // Change strike at end of over
+      const temp = striker;
+      setStriker(nonStriker);
+      setNonStriker(temp);
     }
     
     // Check for innings completion
     if (newWickets >= 10 || Math.floor(newBalls / 6) >= totalOvers) {
-      setTimeout(() => {
-        if (currentInnings === 1) {
-          // First innings completed
-          const target = newRuns + 1;
-          alert(`First innings completed! ${battingTeam}: ${newRuns}/${newWickets}\nTarget for ${bowlingTeam}: ${target} runs`);
-        } else {
-          // Second innings completed - match finished
-          setMatchCompleted(true);
-          calculateMatchResult();
-          setStep('scorecard');
-        }
-      }, 1000);
-    }
-  };
-
-  const saveInnings = () => {
-    if (currentInnings === 1) {
-      // Save first innings data
-      const inningsData = {
-        team: battingTeam,
-        score: team1Score,
-        batsmanStats: batsmanStats,
-        bowlerStats: bowlerStats,
-        ballHistory: ballHistory
-      };
-      localStorage.setItem('firstInningsData', JSON.stringify(inningsData));
-      alert('First innings saved successfully!');
-    } else {
-      // Save second innings data
-      const inningsData = {
-        team: battingTeam,
-        score: team2Score,
-        batsmanStats: batsmanStats,
-        bowlerStats: bowlerStats,
-        ballHistory: ballHistory
-      };
-      localStorage.setItem('secondInningsData', JSON.stringify(inningsData));
-      alert('Second innings saved successfully!');
-    }
-  };
-
-  const changeOver = () => {
-    const newBowler = prompt('Enter new bowler name:');
-    if (newBowler) {
-      setCurrentBowler(newBowler);
-      setCurrentOverBalls([]);
-      switchBatsmen(); // Change strike
-      
-      // Initialize new bowler stats if needed
-      const newBowlerStats = { ...bowlerStats };
-      if (!newBowlerStats[newBowler]) {
-        newBowlerStats[newBowler] = { overs: 0, balls: 0, runs: 0, wickets: 0, maidens: 0 };
+      if (currentInnings === 1) {
+        setCurrentInnings(2);
+        // Switch teams
+        const temp = battingTeam;
+        setBattingTeam(bowlingTeam);
+        setBowlingTeam(temp);
+        setStriker('Batsman 1');
+        setNonStriker('Batsman 2');
+        setCurrentBowler('Bowler 1');
+        setCurrentOverBalls([]);
+      } else {
+        // Match completed
+        setMatchCompleted(true);
+        generateMatchResult();
+        setStep('scorecard');
       }
-      setBowlerStats(newBowlerStats);
     }
-  };
-
-  const handleNoBall = () => {
-    setShowNoBallRuns(true);
-  };
-
-  const recordNoBallRuns = (additionalRuns) => {
-    // NB = 1 (penalty) + additional runs scored by batsman
-    const totalRuns = 1 + additionalRuns;
-    recordBall(totalRuns, true, 'NB', false, '');
-    setShowNoBallRuns(false);
-  };
-
-  const cancelNoBall = () => {
-    setShowNoBallRuns(false);
   };
 
   const generateMatchResult = () => {
@@ -465,7 +288,6 @@ const Scoring = () => {
         <div className="step-indicator">
           <span className={step === 'tournament' ? 'active' : ''}>Tournament</span>
           <span className={step === 'match' ? 'active' : ''}>Match</span>
-          <span className={step === 'setup' ? 'active' : ''}>Setup</span>
           <span className={step === 'toss' ? 'active' : ''}>Toss</span>
           <span className={step === 'scoring' ? 'active' : ''}>Scoring</span>
           <span className={step === 'scorecard' ? 'active' : ''}>Scorecard</span>
@@ -543,148 +365,75 @@ const Scoring = () => {
         </div>
       )}
 
-      {/* Match Setup */}
-      {step === 'setup' && (
-        <div className="step-container">
-          <h2>Match Setup</h2>
-          <button className="back-btn" onClick={() => setStep('match')}>← Back to Matches</button>
-          
-          <div className="setup-container">
-            <div className="match-info-card">
-              <h3>{selectedMatch?.team1} vs {selectedMatch?.team2}</h3>
-              <p>Match {selectedMatch?.matchNumber} - {selectedMatch?.date}</p>
-            </div>
-
-            <div className="overs-setup">
-              <label className="setup-label">
-                Number of Overs:
-                <select 
-                  value={totalOvers} 
-                  onChange={(e) => setTotalOvers(parseInt(e.target.value))}
-                  className="overs-select"
-                >
-                  <option value={5}>5 Overs</option>
-                  <option value={10}>10 Overs</option>
-                  <option value={15}>15 Overs</option>
-                  <option value={20}>20 Overs (T20)</option>
-                  <option value={25}>25 Overs</option>
-                  <option value={30}>30 Overs</option>
-                  <option value={40}>40 Overs</option>
-                  <option value={50}>50 Overs (ODI)</option>
-                </select>
-              </label>
-            </div>
-
-            <div className="players-setup">
-              <div className="team-setup">
-                <h4>{selectedMatch?.team1} Starting Players</h4>
-                <div className="player-inputs">
-                  <input 
-                    type="text" 
-                    placeholder="Opening Batsman 1" 
-                    value={striker}
-                    onChange={(e) => setStriker(e.target.value)}
-                  />
-                  <input 
-                    type="text" 
-                    placeholder="Opening Batsman 2" 
-                    value={nonStriker}
-                    onChange={(e) => setNonStriker(e.target.value)}
-                  />
-                </div>
-              </div>
-              
-              <div className="team-setup">
-                <h4>{selectedMatch?.team2} Starting Bowler</h4>
-                <div className="player-inputs">
-                  <input 
-                    type="text" 
-                    placeholder="Opening Bowler" 
-                    value={currentBowler}
-                    onChange={(e) => setCurrentBowler(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <button 
-              className="proceed-btn" 
-              onClick={handleMatchSetupComplete}
-              disabled={!striker || !nonStriker || !currentBowler}
-            >
-              Proceed to Toss
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* Toss */}
       {step === 'toss' && (
         <div className="step-container">
           <h2>Toss</h2>
-          <button className="back-btn" onClick={() => setStep('setup')}>← Back to Setup</button>
+          <button className="back-btn" onClick={() => setStep('match')}>← Back to Matches</button>
           
           <div className="toss-container">
-            <div className="match-info-card">
+            <div className="match-info">
               <h3>{selectedMatch?.team1} vs {selectedMatch?.team2}</h3>
               <p>{totalOvers} Overs Match</p>
             </div>
 
-            <div className="coin-toss">
-              <h4>Coin Toss</h4>
-              <div 
-                className={`coin ${coinFlipping ? 'flipping' : ''}`}
-                onClick={flipCoin}
-              >
-                {coinFlipping ? '🪙' : (tossResult === 'heads' ? '👑' : '⚡')}
-              </div>
-              {!coinFlipping && (
-                <p className="coin-instruction">Click the coin to flip!</p>
-              )}
-              {tossResult && !coinFlipping && (
-                <p className="toss-result">Result: {tossResult.toUpperCase()}</p>
-              )}
-            </div>
-
-            {tossResult && !showTossModal && (
-              <div className="toss-winner-selection">
-                <h4>Who won the toss?</h4>
-                <div className="team-buttons">
-                  <button 
-                    className={`team-btn ${tossWinner === selectedMatch?.team1 ? 'selected' : ''}`}
-                    onClick={() => handleTossWin(selectedMatch?.team1)}
-                  >
+            <div className="toss-selection">
+              <div className="form-group">
+                <label>Toss Winner:</label>
+                <div className="radio-group">
+                  <label>
+                    <input 
+                      type="radio" 
+                      name="tossWinner" 
+                      value={selectedMatch?.team1}
+                      onChange={(e) => setTossWinner(e.target.value)}
+                    />
                     {selectedMatch?.team1}
-                  </button>
-                  <button 
-                    className={`team-btn ${tossWinner === selectedMatch?.team2 ? 'selected' : ''}`}
-                    onClick={() => handleTossWin(selectedMatch?.team2)}
-                  >
+                  </label>
+                  <label>
+                    <input 
+                      type="radio" 
+                      name="tossWinner" 
+                      value={selectedMatch?.team2}
+                      onChange={(e) => setTossWinner(e.target.value)}
+                    />
                     {selectedMatch?.team2}
-                  </button>
+                  </label>
                 </div>
               </div>
-            )}
 
-            {tossWinner && (
-              <div className="toss-decision">
-                <h4>{tossWinner} chooses to:</h4>
-                <div className="decision-buttons">
-                  <button 
-                    className="decision-btn bat"
-                    onClick={() => handleTossDecision('bat')}
-                  >
-                    🏏 Bat First
-                  </button>
-                  <button 
-                    className="decision-btn bowl"
-                    onClick={() => handleTossDecision('bowl')}
-                  >
-                    ⚾ Bowl First
-                  </button>
+              <div className="form-group">
+                <label>Toss Decision:</label>
+                <div className="radio-group">
+                  <label>
+                    <input 
+                      type="radio" 
+                      name="tossDecision" 
+                      value="bat"
+                      onChange={(e) => setTossDecision(e.target.value)}
+                    />
+                    Bat First
+                  </label>
+                  <label>
+                    <input 
+                      type="radio" 
+                      name="tossDecision" 
+                      value="bowl"
+                      onChange={(e) => setTossDecision(e.target.value)}
+                    />
+                    Bowl First
+                  </label>
                 </div>
               </div>
-            )}
+
+              <button 
+                className="start-match-btn"
+                onClick={handleTossComplete}
+                disabled={!tossWinner || !tossDecision}
+              >
+                Start Match
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -713,13 +462,6 @@ const Scoring = () => {
                 <span className="wickets">/{currentInnings === 1 ? team1Score.wickets : team2Score.wickets}</span>
                 <span className="overs">({Math.floor((currentInnings === 1 ? team1Score.balls : team2Score.balls) / 6)}.{(currentInnings === 1 ? team1Score.balls : team2Score.balls) % 6})</span>
               </div>
-              {currentInnings === 2 && (
-                <div className="target-info">
-                  <span className="target">Target: {team1Score.runs + 1}</span>
-                  <span className="required">Need: {(team1Score.runs + 1) - team2Score.runs} runs</span>
-                  <span className="balls-left">Balls left: {(totalOvers * 6) - team2Score.balls}</span>
-                </div>
-              )}
             </div>
             
             <div className="team-score">
@@ -731,9 +473,6 @@ const Scoring = () => {
                     <span className="wickets">/{team1Score.wickets}</span>
                     <span className="overs">({Math.floor(team1Score.balls / 6)}.{team1Score.balls % 6})</span>
                   </>
-                )}
-                {currentInnings === 1 && (
-                  <span className="first-innings">First to bat</span>
                 )}
               </div>
             </div>
@@ -812,32 +551,10 @@ const Scoring = () => {
             <h4>Extras</h4>
             <div className="extras-buttons">
               <button onClick={() => recordBall(1, true, 'WD')}>Wide</button>
-              <button onClick={handleNoBall} className="no-ball-btn">No Ball +</button>
+              <button onClick={() => recordBall(1, true, 'NB')}>No Ball</button>
               <button onClick={() => recordBall(1, true, 'B')}>Bye</button>
               <button onClick={() => recordBall(1, true, 'LB')}>Leg Bye</button>
-              <button onClick={() => recordBall(2, true, 'B')}>2 Byes</button>
-              <button onClick={() => recordBall(4, true, 'B')}>4 Byes</button>
             </div>
-
-            {/* No Ball Runs Selection Modal */}
-            {showNoBallRuns && (
-              <div className="nb-runs-modal">
-                <div className="nb-runs-content">
-                  <h4>No Ball + Additional Runs</h4>
-                  <p>Select additional runs scored off the no ball:</p>
-                  <div className="nb-runs-buttons">
-                    <button onClick={() => recordNoBallRuns(0)} className="nb-run-btn">NB + 0</button>
-                    <button onClick={() => recordNoBallRuns(1)} className="nb-run-btn">NB + 1</button>
-                    <button onClick={() => recordNoBallRuns(2)} className="nb-run-btn">NB + 2</button>
-                    <button onClick={() => recordNoBallRuns(3)} className="nb-run-btn">NB + 3</button>
-                    <button onClick={() => recordNoBallRuns(4)} className="nb-run-btn">NB + 4</button>
-                    <button onClick={() => recordNoBallRuns(5)} className="nb-run-btn">NB + 5</button>
-                    <button onClick={() => recordNoBallRuns(6)} className="nb-run-btn">NB + 6</button>
-                  </div>
-                  <button onClick={cancelNoBall} className="cancel-nb-btn">Cancel</button>
-                </div>
-              </div>
-            )}
 
             <h4>Wickets</h4>
             <div className="wicket-buttons">
@@ -850,57 +567,13 @@ const Scoring = () => {
             </div>
 
             <div className="action-buttons">
-              <button 
-                className="switch-btn batsman"
-                onClick={switchBatsmen}
-              >
-                🔄 Switch Batsmen
+              <button onClick={() => {
+                const temp = striker;
+                setStriker(nonStriker);
+                setNonStriker(temp);
+              }}>
+                Switch Strike
               </button>
-              
-              <button 
-                className="switch-btn bowler"
-                onClick={() => {
-                  const newBowler = prompt('Enter new bowler name:');
-                  if (newBowler) setCurrentBowler(newBowler);
-                }}
-              >
-                🔄 Change Bowler
-              </button>
-
-              <button 
-                className="change-over-btn"
-                onClick={changeOver}
-              >
-                🏏 Change Over
-              </button>
-
-              <button 
-                className="save-innings-btn"
-                onClick={saveInnings}
-              >
-                💾 Save Innings
-              </button>
-              
-              <button 
-                className="innings-btn"
-                onClick={switchInnings}
-                title="Switch to next innings anytime"
-              >
-                🏏 Switch Innings
-              </button>
-              
-              {currentInnings === 2 && (
-                <button 
-                  className="match-end-btn"
-                  onClick={() => {
-                    setMatchCompleted(true);
-                    calculateMatchResult();
-                    setStep('scorecard');
-                  }}
-                >
-                  🏆 End Match
-                </button>
-              )}
             </div>
           </div>
         </div>

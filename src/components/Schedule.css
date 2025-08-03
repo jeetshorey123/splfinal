@@ -106,7 +106,7 @@
 .table-header,
 .table-row {
   display: grid;
-  grid-template-columns: 80px 80px 1fr auto 1fr 100px 100px 150px 120px 120px;
+  grid-template-columns: 80px 80px 1fr auto 1fr 100px 100px 150px 120px 80px 120px;
   gap: 1rem;
   padding: 1rem;
   align-items: center;
@@ -179,19 +179,69 @@
   100% { opacity: 1; }
 }
 
+/* Schedule Actions */
+.schedule-actions {
+  margin: 1.5rem 0;
+}
+
+.view-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.print-btn,
+.edit-schedule-btn {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.print-btn {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+}
+
+.print-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.edit-schedule-btn {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  color: white;
+}
+
+.edit-schedule-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);
+}
+
 /* Admin Controls */
 .admin-controls {
   margin: 2rem 0;
   padding: 1.5rem;
-  background: #f8f9fa;
-  border-radius: 10px;
-  border: 2px solid #e9ecef;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  border: 2px solid #dee2e6;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .edit-auth-section h3 {
   color: #1e3c72;
   margin-bottom: 1rem;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .auth-form-inline {
@@ -202,41 +252,40 @@
 }
 
 .auth-input {
-  padding: 0.6rem;
+  padding: 0.8rem;
   border: 2px solid #ddd;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  min-width: 150px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  min-width: 160px;
+  transition: border-color 0.3s ease;
 }
 
 .auth-input:focus {
   outline: none;
   border-color: #1e3c72;
+  box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
 }
 
 .auth-btn {
-  padding: 0.6rem 1.2rem;
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .auth-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
 }
 
-.edit-controls {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-}
-
-.edit-toggle-btn {
+.cancel-btn {
   padding: 0.8rem 1.5rem;
   background: #6c757d;
   color: white;
@@ -247,24 +296,55 @@
   transition: all 0.3s ease;
 }
 
-.edit-toggle-btn.active {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-}
-
-.edit-toggle-btn:hover {
+.cancel-btn:hover {
+  background: #5a6268;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.add-match-btn {
-  padding: 0.8rem 1.5rem;
-  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+.edit-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.edit-status {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
   color: white;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.edit-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.edit-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.add-match-btn,
+.exit-edit-btn {
+  padding: 0.8rem 1.5rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.add-match-btn {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
 }
 
 .add-match-btn:hover {
@@ -272,6 +352,17 @@
   box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
 }
 
+.exit-edit-btn {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+}
+
+.exit-edit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+}
+
+/* Action Buttons */
 .action-buttons {
   display: flex;
   gap: 0.5rem;
@@ -302,6 +393,51 @@
 .delete-btn:hover {
   transform: scale(1.1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Edit Column Styles */
+.edit-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.quick-edit-btn {
+  padding: 0.5rem 0.8rem;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 35px;
+}
+
+.quick-edit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(30, 60, 114, 0.3);
+  background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+}
+
+.quick-edit-btn:active {
+  transform: translateY(0);
+}
+
+/* Responsive Grid Adjustment */
+@media (max-width: 1200px) {
+  .table-header,
+  .table-row {
+    grid-template-columns: 60px 60px 1fr auto 1fr 90px 90px 120px 100px 70px 100px;
+    gap: 0.5rem;
+    padding: 0.8rem;
+    font-size: 0.9rem;
+  }
 }
 
 /* Modal Styles */

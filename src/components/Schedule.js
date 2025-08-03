@@ -22,6 +22,7 @@ const Schedule = () => {
   const [editAuth, setEditAuth] = useState(false);
   const [editUsername, setEditUsername] = useState('');
   const [editPassword, setEditPassword] = useState('');
+  const [pendingEditMatch, setPendingEditMatch] = useState(null); // Store match to edit after auth
 
   // Load tournaments and schedules from localStorage
   useEffect(() => {
@@ -44,10 +45,32 @@ const Schedule = () => {
     if (editUsername === 'admin' && editPassword === 'admin123') {
       setEditAuth(true);
       setEditMode(true);
+      
+      // If there's a pending match to edit, open it for editing
+      if (pendingEditMatch) {
+        setEditingMatch({...pendingEditMatch});
+        setPendingEditMatch(null);
+      }
     } else {
       alert('Invalid credentials! Username: admin, Password: admin123');
       setEditUsername('');
       setEditPassword('');
+    }
+  };
+
+  // Handle quick edit button click
+  const handleQuickEdit = (match) => {
+    if (!editAuth) {
+      // Store the match to edit after authentication
+      setPendingEditMatch(match);
+      setEditAuth(true);
+    } else if (!editMode) {
+      // Already authenticated but not in edit mode, store match and trigger auth
+      setPendingEditMatch(match);
+      handleEditAuth();
+    } else {
+      // Already in edit mode, directly edit the match
+      handleEditMatch(match);
     }
   };
 
@@ -238,6 +261,7 @@ const Schedule = () => {
               setActiveTab('show');
               setEditMode(false);
               setEditAuth(false);
+              setPendingEditMatch(null);
             }}
           >
             Show Schedule
@@ -248,6 +272,7 @@ const Schedule = () => {
               setActiveTab('generate');
               setEditMode(false);
               setEditAuth(false);
+              setPendingEditMatch(null);
             }}
           >
             Generate Schedule
@@ -266,6 +291,7 @@ const Schedule = () => {
                 setSelectedTournament(e.target.value);
                 setEditMode(false);
                 setEditAuth(false);
+                setPendingEditMatch(null);
               }}
               className="tournament-dropdown"
             >
@@ -279,42 +305,85 @@ const Schedule = () => {
           </div>
 
           {selectedTournament && scheduleData.length > 0 && (
-            <div className="admin-controls">
-              {!editAuth ? (
-                <div className="edit-auth-section">
-                  <h3>Admin Access Required for Editing</h3>
-                  <div className="auth-form-inline">
-                    <input
-                      type="text"
-                      placeholder="Username"
-                      value={editUsername}
-                      onChange={(e) => setEditUsername(e.target.value)}
-                      className="auth-input"
-                    />
-                    <input
-                      type="password"
-                      placeholder="Password"
-                      value={editPassword}
-                      onChange={(e) => setEditPassword(e.target.value)}
-                      className="auth-input"
-                    />
-                    <button onClick={handleEditAuth} className="auth-btn">
-                      Enable Editing
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="edit-controls">
+            <div className="schedule-actions">
+              <div className="view-actions">
+                <button 
+                  onClick={() => window.print()} 
+                  className="print-btn"
+                  title="Print Schedule"
+                >
+                  🖨️ Print
+                </button>
+                {!editAuth && (
                   <button 
-                    onClick={() => setEditMode(!editMode)}
-                    className={`edit-toggle-btn ${editMode ? 'active' : ''}`}
+                    onClick={() => setEditAuth(true)} 
+                    className="edit-schedule-btn"
+                    title="Edit Schedule (Admin Only)"
                   >
-                    {editMode ? 'Exit Edit Mode' : 'Enter Edit Mode'}
+                    ✏️ Edit Schedule
                   </button>
-                  {editMode && (
-                    <button onClick={addNewMatch} className="add-match-btn">
-                      Add New Match
-                    </button>
+                )}
+              </div>
+              
+              {editAuth && (
+                <div className="admin-controls">
+                  {!editMode ? (
+                    <div className="edit-auth-section">
+                      <h3>🔐 Admin Authentication Required</h3>
+                      <div className="auth-form-inline">
+                        <input
+                          type="text"
+                          placeholder="Username"
+                          value={editUsername}
+                          onChange={(e) => setEditUsername(e.target.value)}
+                          className="auth-input"
+                        />
+                        <input
+                          type="password"
+                          placeholder="Password"
+                          value={editPassword}
+                          onChange={(e) => setEditPassword(e.target.value)}
+                          className="auth-input"
+                        />
+                        <button onClick={handleEditAuth} className="auth-btn">
+                          🔓 Authenticate & Edit
+                        </button>
+                        <button 
+                          onClick={() => {
+                            setEditAuth(false);
+                            setEditUsername('');
+                            setEditPassword('');
+                            setPendingEditMatch(null);
+                          }} 
+                          className="cancel-btn"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="edit-controls">
+                      <div className="edit-status">
+                        <span className="edit-indicator">🔧 Edit Mode Active</span>
+                      </div>
+                      <div className="edit-buttons">
+                        <button onClick={addNewMatch} className="add-match-btn">
+                          ➕ Add New Match
+                        </button>
+                        <button 
+                          onClick={() => {
+                            setEditMode(false);
+                            setEditAuth(false);
+                            setEditUsername('');
+                            setEditPassword('');
+                            setPendingEditMatch(null);
+                          }}
+                          className="exit-edit-btn"
+                        >
+                          ❌ Exit Edit Mode
+                        </button>
+                      </div>
+                    </div>
                   )}
                 </div>
               )}
@@ -336,6 +405,7 @@ const Schedule = () => {
                     <div>Time</div>
                     <div>Venue</div>
                     <div>Status</div>
+                    <div>Edit</div>
                     {editMode && <div>Actions</div>}
                   </div>
                   {scheduleData.map(match => (
@@ -349,6 +419,15 @@ const Schedule = () => {
                       <div>{match.time || 'TBD'}</div>
                       <div>{match.venue || 'TBD'}</div>
                       <div className={`status ${match.status.toLowerCase()}`}>{match.status}</div>
+                      <div className="edit-column">
+                        <button 
+                          onClick={() => handleQuickEdit(match)}
+                          className="quick-edit-btn"
+                          title={!editAuth ? "Click to authenticate and edit" : !editMode ? "Click to enter edit mode" : "Edit this match"}
+                        >
+                          ✏️
+                        </button>
+                      </div>
                       {editMode && (
                         <div className="action-buttons">
                           <button 
