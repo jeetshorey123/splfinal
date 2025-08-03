@@ -1,0 +1,483 @@
+.live-auction {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+}
+
+.auction-step {
+  max-width: 600px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 3rem;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.auction-step h2 {
+  text-align: center;
+  color: #2a5298;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid #e1e5e9;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #2a5298;
+  box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+}
+
+.teams-input {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.btn-primary, .btn-secondary, .btn-success, .btn-warning, .btn-danger {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #2a5298, #1e3c72);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(42, 82, 152, 0.3);
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+}
+
+.btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, #ffc107, #fd7e14);
+  color: white;
+}
+
+.btn-warning:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(255, 193, 7, 0.3);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  color: white;
+}
+
+.btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(220, 53, 69, 0.3);
+}
+
+.auction-summary {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 15px;
+  margin-bottom: 2rem;
+}
+
+.auction-summary h3 {
+  color: #2a5298;
+  margin-bottom: 1rem;
+}
+
+.teams-list {
+  margin-bottom: 2rem;
+}
+
+.teams-list h3 {
+  color: #2a5298;
+  margin-bottom: 1rem;
+}
+
+.team-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.8rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+  border-left: 4px solid #2a5298;
+}
+
+.auction-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.auction-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 1.5rem;
+  border-radius: 15px;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.auction-header h2 {
+  color: #2a5298;
+  margin: 0;
+}
+
+.auction-controls {
+  display: flex;
+  gap: 1rem;
+}
+
+.save-options {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 1.5rem;
+  border-radius: 15px;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.save-options h3 {
+  color: #2a5298;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.teams-purse {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2rem;
+  border-radius: 15px;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.teams-purse h3 {
+  color: #2a5298;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.purse-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.purse-card {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  padding: 1.5rem;
+  border-radius: 15px;
+  border: 2px solid #dee2e6;
+  transition: all 0.3s ease;
+}
+
+.purse-card:hover {
+  border-color: #2a5298;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.purse-card h4 {
+  color: #2a5298;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.purse-details {
+  text-align: center;
+}
+
+.purse-details p {
+  margin: 0.5rem 0;
+  font-weight: 500;
+}
+
+.purse-details p:first-child {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.purse-details p:nth-child(2) {
+  color: #28a745;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.purse-details p:nth-child(3) {
+  color: #dc3545;
+  font-size: 1rem;
+}
+
+.purse-details p:last-child {
+  color: #2a5298;
+  font-weight: 600;
+}
+
+.current-player {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2rem;
+  border-radius: 15px;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.current-player h3 {
+  color: #2a5298;
+  margin-bottom: 1rem;
+}
+
+.player-card {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.player-card h4 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.player-card p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.bidding-section {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2rem;
+  border-radius: 15px;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.bidding-section h3 {
+  color: #2a5298;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.teams-bidding {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.team-bid-card {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 15px;
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.team-bid-card:hover {
+  border-color: #2a5298;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.team-bid-card h4 {
+  color: #2a5298;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.team-bid-card p {
+  margin: 0.5rem 0;
+  text-align: center;
+}
+
+.bid-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.btn-bid {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #2a5298, #1e3c72);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.btn-bid:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(42, 82, 152, 0.3);
+}
+
+.btn-bid:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.auction-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.auction-actions button {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+}
+
+.auction-status {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.status-section {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 1.5rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.status-section h3 {
+  color: #2a5298;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.players-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.player-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem;
+  margin-bottom: 0.5rem;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.player-item.sold {
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  border-left: 4px solid #28a745;
+}
+
+.player-item.unsold {
+  background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+  border-left: 4px solid #dc3545;
+}
+
+@media (max-width: 768px) {
+  .live-auction {
+    padding: 1rem;
+  }
+  
+  .auction-step {
+    padding: 2rem 1.5rem;
+  }
+  
+  .auction-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .auction-controls {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .options-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .purse-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .teams-bidding {
+    grid-template-columns: 1fr;
+  }
+  
+  .bid-buttons {
+    flex-direction: column;
+  }
+  
+  .auction-actions {
+    flex-direction: column;
+  }
+  
+  .auction-status {
+    grid-template-columns: 1fr;
+  }
+  
+  .button-group {
+    flex-direction: column;
+  }
+} 
