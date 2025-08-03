@@ -146,31 +146,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Statistics Section */}
-      <div className="stats-section">
-        <div className="stats-container">
-          <div className="stat-box">
-            <div className="stat-icon">�</div>
-            <div className="stat-number">50+</div>
-            <div className="stat-label">Matches Played</div>
-          </div>
-          <div className="stat-box">
-            <div className="stat-icon">👥</div>
-            <div className="stat-number">200+</div>
-            <div className="stat-label">Registered Players</div>
-          </div>
-          <div className="stat-box">
-            <div className="stat-icon">🏆</div>
-            <div className="stat-number">8</div>
-            <div className="stat-label">Teams Competing</div>
-          </div>
-          <div className="stat-box">
-            <div className="stat-icon">⚡</div>
-            <div className="stat-number">Live</div>
-            <div className="stat-label">Real-time Updates</div>
-          </div>
-        </div>
-      </div>
+      
       {showRegistration && (
         <PlayerRegistration onClose={() => setShowRegistration(false)} />
       )}
