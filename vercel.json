@@ -1,4 +1,6 @@
-{
+Saved locally (Supabase failed)
+We saved your registration locally because the server failed. It will not be synced automatically.
+Error: TypeError: Failed to fetch{
     "rewrites": [
       { "source": "/splfinall/:path*", "destination": "/:path*" }
     ]

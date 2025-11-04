@@ -119,6 +119,25 @@ const Home = () => {
           </div>
         </div>
       )}
+
+      {/* Contact Support Bar */}
+      <div className="contact-support-bar">
+        <div className="support-content">
+          <div className="support-icon">📞</div>
+          <div className="support-text">
+            <h4>Need Help or Support?</h4>
+            <div className="contact-details">
+              <span className="contact-item">
+                <strong>JEET:</strong> <a href="tel:9833232395">9833232395</a>
+              </span>
+              <span className="contact-separator">|</span>
+              <span className="contact-item">
+                <strong>RISHABH:</strong> <a href="tel:9967061814">9967061814</a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,7 +1,13 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = 'https://wnwabwghxbjtmdbujxjz.supabase.co'
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indud2Fid2doeGJqdG1kYnVqeGp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4NzcwNzQsImV4cCI6MjA2OTQ1MzA3NH0.jf6ADsIRXJYuw_8KLfyHgoj8vRDjfndlpVH68VPFF-c'
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || 'https://kyknunxxyjfpzdvamnqb.supabase.co'
+const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5a251bnh4eWpmcHpkdmFtbnFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyODM1NjAsImV4cCI6MjA3Nzg1OTU2MH0.g6lZCihDwXEVoz9HYqU223Izf5Uldlh4phYj8XZWePM'
+
+if (!supabaseUrl || !supabaseAnonKey || supabaseUrl === 'undefined' || supabaseAnonKey === 'undefined') {
+  console.error('Missing Supabase environment variables. Using fallback values.')
+  console.log('URL:', supabaseUrl)
+  console.log('Key present:', !!supabaseAnonKey)
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
@@ -9,6 +15,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 export const TABLES = {
   TEAMS: 'teams',
   PLAYERS: 'players',
+  PLAYER_REGISTRATIONS: 'player_registrations_supabase', // New table for registration form
   TOURNAMENTS: 'tournaments',
   MATCHES: 'matches',
   AUCTIONS: 'auctions',
@@ -62,7 +69,7 @@ export const dbHelpers = {
 
   async createPlayer(player) {
     const { data, error } = await supabase
-      .from(TABLES.PLAYERS)
+      .from(TABLES.PLAYER_REGISTRATIONS)
       .insert([player])
       .select()
     
