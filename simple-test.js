@@ -2,7 +2,7 @@
 const { createClient } = require('@supabase/supabase-js');
 
 const SUPABASE_URL = 'https://kyknunxxyjfpzdvamnqb.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5a251bnh4eWpmcHpkdmFtbnFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyODM1NjAsImV4cCI6MjA3Nzg1OTU2MH0.g6lZCihDwXEVoz9HYqU223Izf5Uldlh4phYj8XZWePM';
+const SUPABASE_ANON_KEY = 'your_supabase_anon_key_here';
 
 console.log('Testing Supabase connection...');
 
