@@ -12,6 +12,8 @@ import Squads from './components/Squads';
 import Scoring from './components/Scoring';
 import Schedule from './components/Schedule';
 import Admin from './components/Admin';
+import RegisterPage from './components/RegisterPage';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -28,8 +30,10 @@ function App() {
           <Route path="/squads" element={<Squads />} />
           <Route path="/scoring" element={<Scoring />} />
           <Route path="/schedule" element={<Schedule />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>
+        <Footer />
       </div>
     </Router>
   );

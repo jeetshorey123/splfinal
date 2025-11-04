@@ -177,6 +177,18 @@ const AboutUs = () => {
           </div>
         </div>
       </div>
+      {/* Photo gallery stacked below description */}
+      <div className="container-wide photos-panel">
+        <h2 className="section-header">Gallery</h2>
+        <div className="photos-list panel">
+          <img src="/aboutusteam.jpg" alt="SPL Team" />
+          <img src="/aboutus2.jpg" alt="Features" />
+          <img src="/aboutus3.jpg" alt="Mission" />
+          <img src="/aboutus4.jpg" alt="How it works" />
+          <img src="/aboutus5.jpg" alt="Tournament" />
+          <img src="/aboutus6.jpg" alt="Team" />
+        </div>
+      </div>
     </div>
   );
 };

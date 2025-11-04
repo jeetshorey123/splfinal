@@ -201,6 +201,16 @@ const LatestNews = () => {
           </div>
         </div>
 
+        {/* Gallery below featured story (stacked) */}
+        <div className="container-wide photos-panel">
+          <h2 className="section-header">Gallery</h2>
+          <div className="photos-list panel">
+            <img src="/aboutus.jpg" alt="SPL Event" />
+            <img src="/aboutus2.jpg" alt="Highlights" />
+            <img src="/aboutus5.jpg" alt="Opening Ceremony" />
+          </div>
+        </div>
+
         {/* SPL Season 1 Teams Blog */}
         <div className="teams-blog" style={{ marginTop: 32, background: '#fff', borderRadius: 12, padding: 24, boxShadow: '0 4px 16px rgba(0,0,0,0.07)' }}>
           <h2 style={{ color: '#2a5298', textAlign: 'center', marginBottom: 16 }}>SPL Season 1 Teams</h2>

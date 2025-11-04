@@ -395,11 +395,55 @@ BEGIN
     END IF;
 END $$;
 
--- Insert Sample Players
 INSERT INTO player_registrations (name, email, phone_number, address, cricket_role, base_price) VALUES 
 ('Virat Kohli', 'virat@example.com', '9999999001', 'Mumbai', 'Batsman', 2000),
 ('Rohit Sharma', 'rohit@example.com', '9999999002', 'Mumbai', 'Batsman', 1800),
+('Rohit Sharma', 'rohit@example.com', '9999999002', 'Mumbai', 'Batsman', 1800)
 ('MS Dhoni', 'dhoni@example.com', '9999999003', 'Chennai', 'Wicket-keeper', 1500),
+
+-- ========================================
+-- Supabase friendly player_registrations table (simple focused table for frontend registration)
+-- Fields: name, age, phone (10 digits), building, wing, flat, timestamps
+-- NOTE: If you already have a comprehensive `player_registrations` table above, either adapt this
+-- block or remove it. This is a minimal table for collecting registration form data.
+-- ========================================
+
+-- Enable pgcrypto (for gen_random_uuid) on Supabase if not already
+create extension if not exists pgcrypto;
+
+create table if not exists public.player_registrations_supabase (
+    id uuid primary key default gen_random_uuid(),
+    name text not null,
+    age integer check (age >= 5 and age <= 100),
+    phone varchar(20) not null check (phone ~ '^[0-9]{10}$'),
+    building text,
+    wing text,
+    flat text,
+    created_at timestamptz default now()
+);
+
+create index if not exists idx_pr_supabase_phone on public.player_registrations_supabase(phone);
+
+-- Row Level Security: enable and add an example anonymous insert policy
+alter table public.player_registrations_supabase enable row level security;
+
+-- Example policy: allow anonymous inserts (only if you intend to use anon key from client)
+-- WARNING: this will allow anyone with your anon key to insert rows. Use carefully.
+create policy "anon_insert_player_registrations" on public.player_registrations_supabase
+    for insert
+    using (true)
+    with check (true);
+
+-- Safer alternative (authenticated users only): uncomment and use if you require auth
+-- create policy "auth_insert_player_registrations" on public.player_registrations_supabase
+--   for insert
+--   using (auth.role() = 'authenticated')
+--   with check (auth.role() = 'authenticated');
+
+-- Example insert
+insert into public.player_registrations_supabase (name, age, phone, building, wing, flat)
+values ('Test Player', 22, '9876543210', 'Sankalp 1', 'A', '101');
+
 ('Jasprit Bumrah', 'bumrah@example.com', '9999999004', 'Mumbai', 'Bowler', 1200),
 ('Hardik Pandya', 'hardik@example.com', '9999999005', 'Baroda', 'All-rounder', 1000)
 ON CONFLICT (email) DO NOTHING;

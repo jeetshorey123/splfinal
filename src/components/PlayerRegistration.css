@@ -1,0 +1,93 @@
+/* PlayerRegistration vertical/mobile-first form styles */
+.registration-modal{
+  position:fixed;inset:0;background:linear-gradient(180deg,rgba(2,6,23,0.6),rgba(2,6,23,0.85));display:flex;align-items:center;justify-content:center;z-index:9000;padding:1rem
+}
+.registration-content{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));backdrop-filter:blur(6px);border:1px solid rgba(110,243,255,0.04);border-radius:12px;padding:1rem 1rem 1.25rem;position:relative;width:420px;max-width:96%}
+.close-btn{position:absolute;right:10px;top:8px;background:transparent;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer}
+.registration-content h2{margin:0 0 .5rem 0;font-family:'Orbitron',sans-serif;color:#ffffff;font-size:1.1rem}
+.success-message {
+  background: rgba(6, 6, 10, 0.95);
+  color: #ffffff;
+  padding: 16px;
+  border-radius: 10px;
+  position: fixed;
+  top: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  width: 92%;
+  max-width: 420px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  text-align: center;
+}
+.success-message .btn-primary {
+  margin-top: 10px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  background: #00e6a8;
+  color: #00220a;
+  border: none;
+  cursor: pointer;
+}
+
+.registration-form{display:flex;flex-direction:column;gap:.65rem;margin-top:.6rem}
+.registration-form label, .registration-form .form-label{display:block;width:100%}
+.form-group{display:flex;flex-direction:column}
+.form-label{font-size:.95rem;color:#ffffff;margin-bottom:.35rem;display:block;font-weight:600}
+.form-input{display:block;width:100%;padding:.6rem .7rem;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:#ffffff;outline:none}
+.form-input::placeholder{color:rgba(255,255,255,0.75)}
+.form-input:focus{box-shadow:0 8px 28px rgba(110,243,255,0.08);border-color:rgba(110,243,255,0.22)}
+
+.form-row{display:flex;gap:.5rem}
+.form-group.small{flex:1}
+
+.btn-primary{margin-top:.65rem;padding:.6rem .8rem;border-radius:8px;border:none;background:var(--accent);color:#041028;font-weight:700;cursor:pointer}
+.btn-primary:active{transform:translateY(1px)}
+
+/* secondary button for sync actions */
+.btn-secondary{margin-top:.65rem;padding:.52rem .75rem;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:#ffffff;font-weight:700;cursor:pointer}
+.btn-secondary[disabled]{opacity:0.6;cursor:not-allowed}
+
+/* ensure selects show white text */
+.form-input select, .form-input option{color:#ffffff;background:transparent}
+.close-btn{position:absolute;right:10px;top:8px;background:transparent;border:none;color:#ffffff;font-size:1.4rem;cursor:pointer}
+
+/* Make the "Full name" label explicitly pure white */
+.registration-form label[for="name"], .form-label[for="name"]{color:#ffffff !important;font-weight:700}
+
+/* Make other form labels explicitly pure white */
+.registration-form label[for="age"], .form-label[for="age"],
+.registration-form label[for="phone"], .form-label[for="phone"],
+.registration-form label[for="building"], .form-label[for="building"],
+.registration-form label[for="wing"], .form-label[for="wing"],
+.registration-form label[for="flat"], .form-label[for="flat"]{
+  color:#ffffff !important;
+  font-weight:700;
+}
+
+/* Make building and wing select dropdown backgrounds black with white text */
+select#building, select#wing {
+  background: #000 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+select#building option, select#wing option {
+  background: #000 !important;
+  color: #ffffff !important;
+}
+
+/* Remove native appearance on WebKit so background styling shows consistently */
+select#building, select#wing {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding-right: 1.4rem; /* leave space for dropdown arrow */
+}
+
+@media (max-width:480px){
+  .registration-content{width:100%;padding:12px}
+  .form-row{flex-direction:column}
+  .form-input{font-size:1rem;padding:.7rem}
+  .registration-content h2{font-size:1rem}
+}

@@ -4,14 +4,28 @@
   box-sizing: border-box;
 }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+/* Futuristic theme variables */
+:root{
+  --bg-1: #070617;
+  --bg-2: #0f1026;
+  --panel: rgba(255,255,255,0.04);
+  --glass: rgba(255,255,255,0.03);
+  --neon-primary: #6ef3ff;
+  --neon-accent: #8a6bff;
+  --muted: rgba(255,255,255,0.6);
+  --glass-border: rgba(110,243,255,0.12);
+}
+
+body{
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: radial-gradient(1200px 600px at 10% 20%, rgba(138,107,255,0.06), transparent),
+              radial-gradient(900px 400px at 90% 80%, rgba(110,243,255,0.04), transparent),
+              linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+  color: #e9f6ff;
   min-height: 100vh;
+  -webkit-font-smoothing: subpixel-antialiased;
 }
 
 code {
@@ -27,7 +41,17 @@ code {
 button {
   cursor: pointer;
   font-family: inherit;
+  background: linear-gradient(90deg,var(--neon-primary), var(--neon-accent));
+  color: #061024;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  box-shadow: 0 6px 28px rgba(106,163,255,0.06), 0 0 18px rgba(110,243,255,0.06) inset;
+  transition: transform .12s ease, box-shadow .12s ease;
 }
+
+button:active{ transform: translateY(1px) }
 
 /* Global link styles */
 a {
@@ -46,7 +70,7 @@ a {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2a5298;
+  background: linear-gradient(180deg,var(--neon-primary), var(--neon-accent));
   border-radius: 10px;
 }
 
@@ -64,6 +88,12 @@ a {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes sweepGradient {
+  0% { background-position: 0% 50% }
+  50% { background-position: 100% 50% }
+  100% { background-position: 0% 50% }
 }
 
 @keyframes slideIn {
@@ -94,5 +124,25 @@ a {
 @media (min-width: 769px) {
   .hide-desktop {
     display: none !important;
+  }
+}
+
+/* Tight mobile controls */
+@media (max-width: 480px) {
+  button, input[type="button"], .btn { padding: 6px 10px; font-size: .9rem; border-radius: 8px }
+}
+
+/* Make buttons smaller and more touch-friendly on narrow screens */
+@media (max-width: 480px) {
+  button, input[type="button"], .btn {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    border-radius: 10px;
+  }
+
+  /* Reduce global link/button spacing */
+  .nav-link, a.button {
+    padding: 0.2rem 0.6rem;
+    font-size: 0.85rem;
   }
 }

@@ -1,0 +1,69 @@
+/* Global futuristic overrides - glass + neon accents */
+:root{
+  --fg:#e9fbff;
+  --muted:rgba(230,250,255,0.7);
+  --neon1: #6ef3ff;
+  --neon2: #8a6bff;
+  --panel: rgba(255,255,255,0.03);
+}
+
+html,body,#root{height:100%}
+
+/* Background sweep */
+body{
+  background: radial-gradient(900px 400px at 10% 10%, rgba(138,107,255,0.06), transparent),
+              radial-gradient(700px 300px at 90% 90%, rgba(110,243,255,0.04), transparent),
+              linear-gradient(180deg,#030312 0%, #071028 100% ) !important;
+  color:var(--fg) !important;
+}
+
+/* Navbar / Topbar overrides */
+.topbar, .navbar{ background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)) !important; }
+.topbar-left{ color:var(--muted) !important }
+.register-link{ background: linear-gradient(90deg,var(--neon1),var(--neon2)) !important; color:#04102a !important }
+.nav-link{ color:var(--muted) !important }
+
+/* Hero: glass panel and neon title */
+.hero-banner{ padding: 3rem 1rem; }
+.hero-title{ font-size:3.4rem !important; background: linear-gradient(90deg,var(--neon1),var(--neon2)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent }
+.hero-subtitle{ color: rgba(234,246,255,0.9) !important }
+
+/* Cards: glass + subtle neon edges */
+.action-card, .feature-card-new, .main-button, .sponsor-card{
+  background: rgba(255,255,255,0.02) !important;
+  border: 1px solid rgba(110,243,255,0.04) !important;
+  box-shadow: 0 8px 30px rgba(2,6,18,0.6) !important;
+}
+
+.action-card.primary:hover, .main-button:hover, .feature-card-new:hover{
+  transform: translateY(-8px) !important;
+  box-shadow: 0 24px 48px rgba(110,243,255,0.06) !important;
+}
+
+.card-arrow{ color: var(--neon1) !important }
+
+/* Buttons smaller on mobile and sleek */
+@media (max-width:480px){
+  .register-link, button, .btn, .nav-link{ padding:6px 8px !important; font-size:.92rem !important }
+  .hero-title{ font-size:1.9rem !important }
+}
+
+/* Subtle animated gradient on headers */
+.section-header h2{ background: linear-gradient(90deg,var(--neon1),var(--neon2)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent }
+
+/* Make images crisp on dark */
+.sponsor-logo{ filter: grayscale(70%) brightness(.95) }
+
+/* Photo panels used across pages */
+.photos-panel{margin:1rem auto}
+.photos-list img{width:100%;display:block;margin-bottom:.75rem;border-radius:8px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+
+/* Footer */
+.site-footer{background:transparent;padding:1rem 0;border-top:1px solid rgba(255,255,255,0.02);margin-top:1.25rem}
+.footer-inner{display:flex;justify-content:center;color:var(--muted);font-size:.95rem}
+
+/* Utility: container width */
+.container-wide{ max-width:1200px; margin:0 auto; padding:0 1rem }
+
+/* Small accessibility tweak: focus ring in neon */
+a:focus, button:focus, input:focus{ outline: 2px solid rgba(110,243,255,0.16); outline-offset:2px }
