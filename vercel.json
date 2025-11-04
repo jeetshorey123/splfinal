@@ -1,8 +1,13 @@
-Saved locally (Supabase failed)
-We saved your registration locally because the server failed. It will not be synced automatically.
-Error: TypeError: Failed to fetch{
-    "rewrites": [
-      { "source": "/splfinall/:path*", "destination": "/:path*" }
-    ]
+{
+  "rewrites": [
+    { "source": "/splfinall/:path*", "destination": "/:path*" }
+  ],
+  "build": {
+    "env": {
+      "REACT_APP_SUPABASE_URL": "@react_app_supabase_url",
+      "REACT_APP_SUPABASE_ANON_KEY": "@react_app_supabase_anon_key",
+      "REACT_APP_SYNC_SERVER_URL": "@react_app_sync_server_url"
+    }
   }
+}
   
