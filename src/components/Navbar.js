@@ -27,6 +27,7 @@ const Navbar = () => {
           <Link to="/about-us" className="nav-link">About</Link>
           <Link to="/watch-live" className="nav-link">Live</Link>
           <Link to="/latest-news" className="nav-link">News</Link>
+          <Link to="/live-auction-public" className="nav-link">Auction</Link>
           <Link to="/scoring" className="nav-link">Scoring</Link>
           <Link to="/schedule" className="nav-link">Schedule</Link>
           <Link to="/admin" className="nav-link">Admin</Link>

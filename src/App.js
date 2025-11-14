@@ -7,6 +7,7 @@ import AboutUs from './components/AboutUs';
 import WatchLive from './components/WatchLive';
 import LatestNews from './components/LatestNews';
 import LiveAuction from './components/LiveAuction';
+import LiveAuctionPublic from './components/LiveAuctionPublic';
 import ScoreBoard from './components/ScoreBoard';
 import Squads from './components/Squads';
 import Scoring from './components/Scoring';
@@ -26,6 +27,7 @@ function App() {
           <Route path="/watch-live" element={<WatchLive />} />
           <Route path="/latest-news" element={<LatestNews />} />
           <Route path="/live-auction" element={<LiveAuction />} />
+          <Route path="/live-auction-public" element={<LiveAuctionPublic />} />
           <Route path="/score-board" element={<ScoreBoard />} />
           <Route path="/squads" element={<Squads />} />
           <Route path="/scoring" element={<Scoring />} />

@@ -194,11 +194,15 @@ INSERT INTO tournaments (name, description, total_teams, status) VALUES
 ('Sankalp Premier League 2025', 'Annual cricket tournament', 8, 'Upcoming')
 ON CONFLICT (name) DO NOTHING;
 
--- Sample Schedule Data
+-- Sample Schedule Data with Knockout/Playoff Format
 INSERT INTO tournament_schedule (tournament_name, tournament_id, match_id, round_number, match_number, team1, team2, match_date, venue, status) VALUES
-('Sankalp Premier League 2025', 'SPL_2025', 'SPL_2025_M001', 1, 1, 'Mumbai Indians', 'Chennai Super Kings', '2025-08-10', 'SPL Stadium', 'Scheduled'),
-('Sankalp Premier League 2025', 'SPL_2025', 'SPL_2025_M002', 1, 2, 'Delhi Capitals', 'Royal Challengers', '2025-08-11', 'SPL Stadium', 'Scheduled'),
-('Sankalp Premier League 2025', 'SPL_2025', 'SPL_2025_M003', 2, 1, 'Mumbai Indians', 'Delhi Capitals', '2025-08-12', 'SPL Stadium', 'Scheduled')
+-- Initial Matches
+('Sankalp Premier League 2025', 'SPL_2025', 'SPL_2025_M001', 1, 1, 'Team 1', 'Team 2', '2025-08-10', 'SPL Stadium', 'Scheduled'),
+('Sankalp Premier League 2025', 'SPL_2025', 'SPL_2025_M002', 1, 2, 'Team 3', 'Team 4', '2025-08-11', 'SPL Stadium', 'Scheduled'),
+-- Semi-Finals / Playoff Matches
+('Sankalp Premier League 2025', 'SPL_2025', 'SPL_2025_M003', 2, 1, 'Loser of Match 1', 'Winner of Match 2', '2025-08-12', 'SPL Stadium', 'Scheduled'),
+-- Final Match
+('Sankalp Premier League 2025', 'SPL_2025', 'SPL_2025_M004', 3, 1, 'Winner of Match 1', 'Winner of Match 3', '2025-08-13', 'SPL Stadium', 'Scheduled')
 ON CONFLICT (match_id) DO NOTHING;
 
 -- Sample Auction Data

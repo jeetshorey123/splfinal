@@ -1,3 +1,40 @@
-.site-footer{background:transparent;padding:1rem 0;border-top:1px solid rgba(255,255,255,0.02);margin-top:1.25rem}
-.footer-inner{display:flex;justify-content:center;color:var(--muted);font-size:.95rem}
-@media (max-width:480px){.footer-inner{font-size:.92rem;padding:0 8px}}
+/* Modern Futuristic Footer */
+.site-footer {
+  background: linear-gradient(180deg, transparent 0%, rgba(168, 85, 247, 0.05) 100%);
+  padding: 2rem 0;
+  border-top: 1px solid rgba(168, 85, 247, 0.3);
+  margin-top: 3rem;
+  position: relative;
+}
+
+.site-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(168, 85, 247, 0.6) 50%, 
+    transparent 100%);
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #e9f6ff;
+  font-size: 1rem;
+  font-weight: 500;
+  text-shadow: 0 2px 10px rgba(168, 85, 247, 0.3);
+}
+
+@media (max-width: 480px) {
+  .footer-inner {
+    font-size: 0.9rem;
+    padding: 0 1rem;
+    text-align: center;
+  }
+}
+

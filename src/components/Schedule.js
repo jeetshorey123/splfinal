@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { supabase } from '../config/supabase';
 import './Schedule.css';
 
 const Schedule = () => {
@@ -24,25 +25,145 @@ const Schedule = () => {
   const [editPassword, setEditPassword] = useState('');
   const [pendingEditMatch, setPendingEditMatch] = useState(null); // Store match to edit after auth
 
-  // Load tournaments and schedules from localStorage
+  // Load tournaments and schedules from localStorage and Supabase
   useEffect(() => {
     const savedTournaments = JSON.parse(localStorage.getItem('tournaments') || '[]');
     setTournaments(savedTournaments);
+    
+    // Also load from Supabase
+    loadTournamentsFromSupabase();
   }, []);
+
+  // Load tournaments from Supabase
+  const loadTournamentsFromSupabase = async () => {
+    try {
+      const { data: tournamentsData, error } = await supabase
+        .from('tournaments')
+        .select(`
+          *,
+          tournament_schedule (*)
+        `)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      if (tournamentsData && tournamentsData.length > 0) {
+        // Transform data for your component
+        const transformedTournaments = tournamentsData.map(t => ({
+          id: t.id,
+          name: t.name,
+          teams: [], // You can populate this if you have a teams table
+          schedule: (t.tournament_schedule || []).map(s => ({
+            id: s.match_id,
+            round: s.round_number,
+            match: s.match_number,
+            team1: s.team1,
+            team2: s.team2,
+            date: s.match_date,
+            time: s.match_time,
+            venue: s.venue,
+            status: s.status
+          })),
+          createdAt: t.created_at
+        }));
+
+        // Merge with localStorage tournaments
+        const localTournaments = JSON.parse(localStorage.getItem('tournaments') || '[]');
+        const allTournaments = [...transformedTournaments, ...localTournaments.filter(lt => 
+          !transformedTournaments.find(t => t.name === lt.name)
+        )];
+        
+        setTournaments(allTournaments);
+      }
+    } catch (error) {
+      console.error('Error loading tournaments from Supabase:', error);
+    }
+  };
+
+  // Save tournament to Supabase
+  const saveTournamentToSupabase = async (tournamentData) => {
+    try {
+      // 1. Save tournament
+      const { data: tournament, error: tournamentError } = await supabase
+        .from('tournaments')
+        .insert([{
+          name: tournamentData.name,
+          description: `Tournament with ${tournamentData.teams.length} teams`,
+          start_date: new Date().toISOString().split('T')[0],
+          total_teams: tournamentData.teams.length,
+          status: 'Upcoming'
+        }])
+        .select()
+        .single();
+
+      if (tournamentError) throw tournamentError;
+
+      const tournamentId = `TOUR_${tournament.id}`;
+
+      // 2. Save schedule matches
+      const scheduleMatches = tournamentData.schedule.map((match, index) => ({
+        tournament_name: tournamentData.name,
+        tournament_id: tournamentId,
+        match_id: `${tournamentId}_M${String(index + 1).padStart(3, '0')}`,
+        round_number: match.round,
+        match_number: match.match,
+        team1: match.team1,
+        team2: match.team2,
+        match_date: match.date || null,
+        match_time: match.time || null,
+        venue: match.venue || 'TBD',
+        status: match.status || 'Scheduled'
+      }));
+
+      const { data: schedule, error: scheduleError } = await supabase
+        .from('tournament_schedule')
+        .insert(scheduleMatches)
+        .select();
+
+      if (scheduleError) throw scheduleError;
+
+      // 3. Show success notification
+      alert(`✅ Success!\n\nTournament: ${tournamentData.name}\nMatches: ${schedule.length}\n\n✅ Saved to database!`);
+      
+      // Browser notification
+      if ('Notification' in window) {
+        if (Notification.permission === 'granted') {
+          new Notification('Tournament Saved! 🏆', {
+            body: `${tournamentData.name} with ${schedule.length} matches has been saved successfully!`,
+            icon: '/logo192.png'
+          });
+        } else if (Notification.permission !== 'denied') {
+          Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+              new Notification('Tournament Saved! 🏆', {
+                body: `${tournamentData.name} saved successfully!`
+              });
+            }
+          });
+        }
+      }
+
+      return { tournament, schedule };
+    } catch (error) {
+      console.error('Error saving tournament to Supabase:', error);
+      alert(`⚠️ Saved locally but failed to save to database: ${error.message}`);
+      throw error;
+    }
+  };
 
   // Authentication
   const handleAuth = () => {
-    if (adminUsername === 'admin' && adminPassword === 'admin123') {
+    if (adminUsername === 'jeet' && adminPassword === 'jeet') {
       setIsAuthenticated(true);
       setCurrentStep('teams');
     } else {
-      alert('Invalid credentials! Username: admin, Password: admin123');
+      alert('Invalid credentials!');
     }
   };
 
   // Edit Authentication
   const handleEditAuth = () => {
-    if (editUsername === 'admin' && editPassword === 'admin123') {
+    if (editUsername === 'jeet' && editPassword === 'jeet') {
       setEditAuth(true);
       setEditMode(true);
       
@@ -52,7 +173,7 @@ const Schedule = () => {
         setPendingEditMatch(null);
       }
     } else {
-      alert('Invalid credentials! Username: admin, Password: admin123');
+      alert('Invalid credentials!');
       setEditUsername('');
       setEditPassword('');
     }
@@ -92,7 +213,7 @@ const Schedule = () => {
   };
 
   // Generate round-robin schedule
-  const generateSchedule = () => {
+  const generateSchedule = async () => {
     if (!tournamentName.trim()) {
       alert('Please enter tournament name');
       return;
@@ -153,11 +274,25 @@ const Schedule = () => {
       createdAt: new Date().toISOString()
     };
 
-    const updatedTournaments = [...tournaments, newTournament];
-    setTournaments(updatedTournaments);
-    localStorage.setItem('tournaments', JSON.stringify(updatedTournaments));
+    try {
+      // Save to Supabase first
+      await saveTournamentToSupabase(newTournament);
 
-    alert(`Schedule generated successfully for ${tournamentName}!`);
+      // Also save to localStorage as backup
+      const updatedTournaments = [...tournaments, newTournament];
+      setTournaments(updatedTournaments);
+      localStorage.setItem('tournaments', JSON.stringify(updatedTournaments));
+
+      // Reload from Supabase to get the latest data
+      await loadTournamentsFromSupabase();
+    } catch (error) {
+      // If Supabase fails, still save locally
+      const updatedTournaments = [...tournaments, newTournament];
+      setTournaments(updatedTournaments);
+      localStorage.setItem('tournaments', JSON.stringify(updatedTournaments));
+      
+      alert(`Schedule generated and saved locally for ${tournamentName}!\n(Database sync failed, but data is safe in browser storage)`);
+    }
     
     // Reset form
     setCurrentStep('auth');

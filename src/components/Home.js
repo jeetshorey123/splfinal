@@ -19,7 +19,7 @@ const Home = () => {
         </div>
         <div className="dash-actions">
           <button className="btn btn-ghost" onClick={() => setShowRegistration(true)}>Quick Register</button>
-          <Link to="/live-auction" className="btn btn-primary">Enter Auction</Link>
+          <Link to="/live-auction-public" className="btn btn-primary">Enter Auction</Link>
         </div>
       </header>
 
